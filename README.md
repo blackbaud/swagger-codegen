@@ -22,3 +22,9 @@ cd swagger-codegen
 ```
 java -jar modules/swagger-codegen-cli/target/swagger-codegen-cli.jar generate -i path/to/swagger/json/service.json -l java -o path/to/output-dir -c config.json
 ```
+
+## Templates location:
+``
+Templates are located in:
+modules/swagger-codegen/src/main/resources/Java
+```
