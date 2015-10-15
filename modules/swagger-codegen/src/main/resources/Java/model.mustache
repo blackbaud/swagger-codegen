@@ -9,6 +9,13 @@ import java.io.Serializable;{{/serializableModel}}
 
 import io.swagger.annotations.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 {{#models}}
 
 {{#model}}{{#description}}
@@ -16,6 +23,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * {{description}}
  **/{{/description}}
 @ApiModel(description = "{{{description}}}")
+@Data
+@EqualsAndHashCode
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 {{>generatedAnnotation}}
 public class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {{#serializableModel}}implements Serializable{{/serializableModel}} {
   {{#vars}}{{#isEnum}}
@@ -26,31 +38,8 @@ public class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {{#seriali
   private {{{datatypeWithEnum}}} {{name}} = {{{defaultValue}}};{{/vars}}
 
   {{#vars}}
-  /**{{#description}}
-   * {{{description}}}{{/description}}{{#minimum}}
-   * minimum: {{minimum}}{{/minimum}}{{#maximum}}
-   * maximum: {{maximum}}{{/maximum}}
-   **/
-  @ApiModelProperty({{#required}}required = {{required}}, {{/required}}value = "{{{description}}}")
-  @JsonProperty("{{baseName}}")
-  public {{{datatypeWithEnum}}} {{getter}}() {
-    return {{name}};
-  }
-  public void {{setter}}({{{datatypeWithEnum}}} {{name}}) {
-    this.{{name}} = {{name}};
-  }
-
   {{/vars}}
 
-  @Override
-  public String toString()  {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class {{classname}} {\n");
-    {{#parent}}sb.append("    ").append(StringUtil.toIndentedString(super.toString())).append("\n");{{/parent}}
-    {{#vars}}sb.append("    {{name}}: ").append(StringUtil.toIndentedString({{name}})).append("\n");
-    {{/vars}}sb.append("}");
-    return sb.toString();
-  }
 }
 {{/model}}
 {{/models}}
