@@ -1,0 +1,10 @@
+{
+"modelPackage":"com.blackbaud.bluemoon.dojo.client.model",
+"apiPackage":"com.blackbaud.bluemoon.dojo.client.api",
+"invokerPackage":"com.blackbaud.bluemoon.dojo.client",
+"groupId":"com.blackbaud.bluemoon.dojo.client",
+"artifactId":"bluemoon-dojo-client",
+"artifactVersion":"1.0.0",
+"sourceFolder":"src/generated/java",
+"library": "jersey2"
+}
