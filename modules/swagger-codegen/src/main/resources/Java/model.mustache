@@ -23,7 +23,6 @@ import lombok.NoArgsConstructor;
  * {{description}}
  **/{{/description}}
 @ApiModel(description = "{{{description}}}")
-@Data
 @EqualsAndHashCode
 @Builder
 @AllArgsConstructor
@@ -38,6 +37,13 @@ public class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {{#seriali
   private {{{datatypeWithEnum}}} {{name}} = {{{defaultValue}}};{{/vars}}
 
   {{#vars}}
+  @JsonProperty("{{baseName}}")
+  public {{{datatypeWithEnum}}} {{getter}}() {
+    return {{name}};
+  }
+  public void {{setter}}({{{datatypeWithEnum}}} {{name}}) {
+    this.{{name}} = {{name}};
+  }
   {{/vars}}
 
 }

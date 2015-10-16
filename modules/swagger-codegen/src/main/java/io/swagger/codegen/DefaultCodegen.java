@@ -327,7 +327,8 @@ public class DefaultCodegen {
         typeMapping.put("object", "Object");
         typeMapping.put("integer", "Integer");
         typeMapping.put("ByteArray", "byte[]");
-
+        typeMapping.put("LocalDate", "java.time.LocalDate");
+        typeMapping.put("URI", "java.net.URI");
 
         instantiationTypes = new HashMap<String, String>();
 
@@ -345,10 +346,12 @@ public class DefaultCodegen {
         importMapping.put("ArrayList", "java.util.ArrayList");
         importMapping.put("List", "java.util.*");
         importMapping.put("Set", "java.util.*");
-        importMapping.put("DateTime", "org.joda.time.*");
-        importMapping.put("LocalDateTime", "org.joda.time.*");
-        importMapping.put("LocalDate", "org.joda.time.*");
-        importMapping.put("LocalTime", "org.joda.time.*");
+        importMapping.put("LocalDate", "java.time.LocalDate");
+        importMapping.put("URI", "java.net.URI");
+        //importMapping.put("DateTime", "org.joda.time.*");
+        //importMapping.put("LocalDateTime", "org.joda.time.*");
+        //importMapping.put("LocalDate", "org.joda.time.*");
+        //importMapping.put("LocalTime", "org.joda.time.*");
 
         cliOptions.add(new CliOption(CodegenConstants.MODEL_PACKAGE, CodegenConstants.MODEL_PACKAGE_DESC));
         cliOptions.add(new CliOption(CodegenConstants.API_PACKAGE, CodegenConstants.API_PACKAGE_DESC));
