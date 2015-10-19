@@ -10,7 +10,7 @@ Check out [Swagger-Spec](https://github.com/swagger-api/swagger-spec) for additi
 ## Build and run using docker
 
 ```
-git clone https://github.com/swagger-api/swagger-codegen
+git clone https://github.com/blackbaud/swagger-codegen
 
 cd swagger-codegen
 
