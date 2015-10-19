@@ -1,0 +1,38 @@
+allprojects  {
+  apply plugin: 'maven'
+//  apply plugin: 'blackbaud-internal'
+
+  group = 'com.blackbaud'
+version = '0.99999'
+}
+
+subprojects {
+  apply plugin: 'java'
+  sourceCompatibility = 1.6
+  targetCompatibility = 1.6
+
+  task packageSources(type: Jar) {
+classifier = 'sources'
+from sourceSets.main.allSource
+
+}
+artifacts.archives packageSources
+  repositories {
+    mavenLocal()
+    
+    maven { url "http://repo2.corp.convio.com/content/groups/public" }
+    maven { url "http://repo1.maven.org/maven2" }
+    maven { url "https://repository.jboss.org/nexus/content/groups/public-jboss/" }
+    maven { url "http://repo2.corp.convio.com/content/groups/convio" }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    maven { url "http://repo.maven.apache.org/maven2" }
+  }
+
+  configurations.all {
+}
+  
+task codegen(type: Exec) {
+  commandLine 'mvn', 'package'
+}
+  
+}
