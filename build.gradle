@@ -32,6 +32,7 @@ artifacts.archives packageSources
 }
   
 task codegen(type: Exec) {
+  workingDir '../..'
   commandLine './run-in-docker.sh', 'mvn', 'package'
 }
   
