@@ -14,6 +14,8 @@ generated-code/*
 *.swp
 *.swo
 
+.gradle
+
 /target
 /generated-files
 /nbactions.xml

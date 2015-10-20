@@ -27,7 +27,7 @@ mkdir -p "$maven_cache_repo"
 
 set -x
 
-docker run -it \
+docker run -i \
         -w /gen \
         -v "${PWD}:/gen" \
         -v "${maven_cache_repo}:/root/.m2/repository" \

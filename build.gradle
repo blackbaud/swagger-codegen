@@ -1,0 +1,31 @@
+buildscript {
+    dependencies {
+        classpath "com.blackbaud:gradle-internal:2+"
+    }
+}
+
+apply plugin: "blackbaud-internal" 
+
+task codegen(type: Exec) {
+  commandLine './run-in-docker.sh', 'mvn', 'package'
+}
+
+task copyCliJarRename(type: Copy) {
+  from "modules/swagger-codegen-cli/target/swagger-codegen-cli.jar"
+  into "${buildDir}"
+  rename { String fileName ->
+    fileName.replace('.jar', "-${version}.jar")
+  }
+}
+
+copyCliJarRename.dependsOn codegen
+
+def artifactFile = new File("${buildDir}/swagger-codegen-cli-${version}.jar")
+
+publishing_ext {
+  publication("main") {
+    artifacts {
+      archives file: artifactFile
+    }
+  }
+}
