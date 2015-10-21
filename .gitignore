@@ -15,6 +15,7 @@ generated-code/*
 *.swo
 
 .gradle
+**/build
 
 /target
 /generated-files
