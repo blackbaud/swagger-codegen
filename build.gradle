@@ -19,6 +19,7 @@ task copyCliJarRename(type: Copy) {
 }
 
 copyCliJarRename.dependsOn codegen
+publish.dependsOn copyCliJarRename
 
 def artifactFile = new File("${buildDir}/swagger-codegen-cli-${version}.jar")
 
