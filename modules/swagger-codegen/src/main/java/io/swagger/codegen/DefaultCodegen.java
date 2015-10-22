@@ -870,8 +870,12 @@ public class DefaultCodegen {
         }
         return responses.get(code);
     }
-
+    
     public CodegenOperation fromOperation(String path, String httpMethod, Operation operation, Map<String, Model> definitions) {
+    	return fromOperation(path, httpMethod, operation, definitions, null);
+    }
+    
+    public CodegenOperation fromOperation(String path, String httpMethod, Operation operation, Map<String, Model> definitions, Swagger swagger) {
         CodegenOperation op = CodegenModelFactory.newInstance(CodegenModelType.OPERATION);
         Set<String> imports = new HashSet<String>();
         op.vendorExtensions = operation.getVendorExtensions();
@@ -907,15 +911,32 @@ public class DefaultCodegen {
         op.summary = escapeText(operation.getSummary());
         op.notes = escapeText(operation.getDescription());
         op.tags = operation.getTags();
+        op.hasConsumes = false;
+        op.hasProduces = false;
 
-        if (operation.getConsumes() != null && operation.getConsumes().size() > 0) {
+        List<String> consumes = new ArrayList<String>();
+        if (operation.getConsumes() != null) {
+            if (operation.getConsumes().size() > 0) {
+                // use consumes defined in the operation
+                consumes = operation.getConsumes();
+            } else {
+                // empty list, do nothing to override global setting
+            }
+        } else if (swagger != null && swagger.getConsumes() != null && swagger.getConsumes().size() > 0) {
+            // use consumes defined globally 
+            consumes = swagger.getConsumes();
+            LOGGER.debug("No consumes defined in operation. Using global consumes (" + swagger.getConsumes() + ") for " + op.operationId);
+        }
+        
+        // if "consumes" is defined (per operation or using global definition)
+        if (consumes != null && consumes.size() > 0) {
             List<Map<String, String>> c = new ArrayList<Map<String, String>>();
             int count = 0;
-            for (String key : operation.getConsumes()) {
+            for (String key : consumes) {
                 Map<String, String> mediaType = new HashMap<String, String>();
                 mediaType.put("mediaType", key);
                 count += 1;
-                if (count < operation.getConsumes().size()) {
+                if (count < consumes.size()) {
                     mediaType.put("hasMore", "true");
                 } else {
                     mediaType.put("hasMore", null);
@@ -926,14 +947,29 @@ public class DefaultCodegen {
             op.hasConsumes = true;
         }
 
-        if (operation.getProduces() != null && operation.getProduces().size() > 0) {
+        List<String> produces = new ArrayList<String>();
+        if (operation.getProduces() != null) {
+            if (operation.getProduces().size() > 0) {
+                // use produces defined in the operation
+                produces = operation.getProduces();
+            } else {
+                // empty list, do nothing to override global setting
+            }
+        } else if (swagger != null && swagger.getProduces() != null && swagger.getProduces().size() > 0) {
+            // use produces defined globally 
+            produces = swagger.getProduces();
+            LOGGER.debug("No produces defined in operation. Using global produces (" + swagger.getProduces() + ") for " + op.operationId);
+        }
+        
+        // if "produces" is defined (per operation or using global definition)
+        if (produces != null && produces.size() > 0) {
             List<Map<String, String>> c = new ArrayList<Map<String, String>>();
             int count = 0;
-            for (String key : operation.getProduces()) {
+            for (String key : produces) {
                 Map<String, String> mediaType = new HashMap<String, String>();
                 mediaType.put("mediaType", key);
                 count += 1;
-                if (count < operation.getProduces().size()) {
+                if (count < produces.size()) {
                     mediaType.put("hasMore", "true");
                 } else {
                     mediaType.put("hasMore", null);
@@ -1208,6 +1244,9 @@ public class DefaultCodegen {
             p._enum = model._enum;
             p.allowableValues = model.allowableValues;
             p.collectionFormat = collectionFormat;
+            if(collectionFormat != null && collectionFormat.equals("multi")) {
+                p.isCollectionFormatMulti = true;
+            }
             p.paramName = toParamName(qp.getName());
 
             if (model.complexType != null) {
@@ -1310,7 +1349,23 @@ public class DefaultCodegen {
                 sec.authorizationUrl = oauth2Definition.getAuthorizationUrl();
                 sec.tokenUrl = oauth2Definition.getTokenUrl();
                 if (oauth2Definition.getScopes() != null) {
-                    sec.scopes = oauth2Definition.getScopes().keySet();
+                    List<Map<String, Object>> scopes = new ArrayList<Map<String, Object>>();
+                    int count = 0, numScopes = oauth2Definition.getScopes().size();
+                    for(Map.Entry<String, String> scopeEntry : oauth2Definition.getScopes().entrySet()) {
+                        Map<String, Object> scope = new HashMap<String, Object>();
+                        scope.put("scope", scopeEntry.getKey());
+                        scope.put("description", scopeEntry.getValue());
+                        
+                        count += 1;
+                        if (count < numScopes) {
+                            scope.put("hasMore", "true");
+                        } else {
+                            scope.put("hasMore", null);
+                        }
+                        
+                        scopes.add(scope);
+                    }
+                    sec.scopes = scopes;
                 }
             }
 

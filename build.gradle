@@ -7,25 +7,29 @@ buildscript {
 apply plugin: "blackbaud-internal" 
 
 task codegen(type: Exec) {
-  commandLine './run-in-docker.sh', 'mvn', 'package'
+  commandLine './run-in-docker.sh', 'mvn', 'clean', 'package'
 }
 
 task copyCliJarRename(type: Copy) {
   from "modules/swagger-codegen-cli/target/swagger-codegen-cli.jar"
-  into "${buildDir}"
+  into "${buildDir}/libs"
   rename { String fileName ->
     fileName.replace('.jar', "-${version}.jar")
   }
 }
 
 copyCliJarRename.dependsOn codegen
+copyCliJarRename.mustRunAfter jar
+publish.dependsOn copyCliJarRename
 
-def artifactFile = new File("${buildDir}/swagger-codegen-cli-${version}.jar")
+def artifactFile = new File("${buildDir}/libs/swagger-codegen-cli-${version}.jar")
 
+project.ext.customPublication = true
 publishing_ext {
   publication("main") {
     artifacts {
-      archives file: artifactFile
+      archives artifactFile
     }
+  publishSources false
   }
 }
