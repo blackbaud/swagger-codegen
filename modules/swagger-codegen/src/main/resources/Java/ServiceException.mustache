@@ -1,0 +1,28 @@
+package {{invokerPackage}};
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import javax.ws.rs.core.Response;
+import java.util.Map;
+import java.util.List;
+
+@Getter
+@Setter
+@ToString
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+{{>generatedAnnotation}}
+public class ServiceException extends RuntimeException {
+
+    private Map<String, List<String>> responseHeaders = null;
+    private String errorCode;
+    private Response.Status statusCode;
+    private String message;
+    private Object[] args;
+}
+

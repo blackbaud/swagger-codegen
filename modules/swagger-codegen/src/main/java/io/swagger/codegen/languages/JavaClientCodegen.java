@@ -195,6 +195,7 @@ public class JavaClientCodegen extends DefaultCodegen implements CodegenConfig {
         //supportingFiles.add(new SupportingFile("gradle.properties.mustache", "", "gradle.properties"));
         supportingFiles.add(new SupportingFile("ApiClient.mustache", invokerFolder, "ApiClient.java"));
         supportingFiles.add(new SupportingFile("StringUtil.mustache", invokerFolder, "StringUtil.java"));
+        supportingFiles.add(new SupportingFile("ServiceException.mustache", invokerFolder, "ServiceException.java"));
 
         final String authFolder = (sourceFolder + File.separator + invokerPackage + ".auth").replace(".", File.separator);
         supportingFiles.add(new SupportingFile("auth/HttpBasicAuth.mustache", authFolder, "HttpBasicAuth.java"));

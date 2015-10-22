@@ -327,7 +327,7 @@ public class DefaultCodegen {
         typeMapping.put("object", "Object");
         typeMapping.put("integer", "Integer");
         typeMapping.put("ByteArray", "byte[]");
-        typeMapping.put("LocalDate", "java.time.LocalDate");
+        typeMapping.put("Date", "java.time.LocalDate");
         typeMapping.put("URI", "java.net.URI");
 
         instantiationTypes = new HashMap<String, String>();
