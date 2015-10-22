@@ -7,7 +7,7 @@ buildscript {
 apply plugin: "blackbaud-internal" 
 
 task codegen(type: Exec) {
-  commandLine './run-in-docker.sh', 'mvn', 'package'
+  commandLine './run-in-docker.sh', 'mvn', 'clean', 'package'
 }
 
 task copyCliJarRename(type: Copy) {
