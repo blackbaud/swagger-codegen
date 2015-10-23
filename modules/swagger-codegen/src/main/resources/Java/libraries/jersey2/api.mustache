@@ -46,7 +46,7 @@ public class {{classname}} {
     {{#allParams}}{{#required}}
     // verify the required parameter '{{paramName}}' is set
     if ({{paramName}} == null) {
-      throw new ApiException(400, "Missing the required parameter '{{paramName}}' when calling {{nickname}}");
+      throw ApiException.builder().code(400).message("Missing the required parameter '{{paramName}}' when calling {{nickname}}").build();
     }
     {{/required}}{{/allParams}}
     // create path and map variables

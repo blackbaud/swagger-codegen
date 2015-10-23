@@ -366,7 +366,10 @@ public class ApiClient {
     if (contentType.startsWith("application/json")) {
       return Entity.json(json.serialize(obj));
     } else {
-      throw new ApiException(400, "can not serialize object into Content-Type: " + contentType);
+	throw ApiException.builder()
+              .code(400)
+              .message("can not serialize object into Content-Type: " + contentType)
+              .build();
     }
   }
 
@@ -379,8 +382,10 @@ public class ApiClient {
     if (contentTypes != null && !contentTypes.isEmpty())
       contentType = String.valueOf(contentTypes.get(0));
     if (contentType == null)
-      throw new ApiException(500, "missing Content-Type in response");
-
+      throw ApiException.builder()
+              .code(500)
+              .message("missing Content-Type in response")
+              .build();
     String body;
     if (response.hasEntity())
       body = (String) response.readEntity(String.class);
@@ -393,11 +398,10 @@ public class ApiClient {
       // Expecting string, return the raw response body.
       return (T) body;
     } else {
-      throw new ApiException(
-        500,
-        "Content type \"" + contentType + "\" is not supported for type: "
-          + returnType.getType()
-      );
+      throw ApiException.builder()
+              .code(500)
+              .message( "Content type \"" + contentType + "\" is not supported for type: " + returnType.getType())
+              .build();
     }
   }
 
@@ -416,7 +420,7 @@ public class ApiClient {
    * @param returnType The return type into which to deserialize the response
    * @return The response body in type of string
    */
-  public <T> T invokeAPI(String path, String method, List<Pair> queryParams, Object body, Map<String, String> headerParams, Map<String, Object> formParams, String accept, String contentType, String[] authNames, TypeRef returnType) throws ApiException {
+  public <T> T invokeAPI(String path, String method, List<Pair> queryParams, Object body, Map<String, String> headerParams, Map<String, Object> formParams, String accept, String contentType, String[] authNames, TypeRef returnType) {
     updateParamsForAuth(authNames, queryParams, headerParams);
 
     final ClientConfig clientConfig = new ClientConfig();
@@ -505,7 +509,10 @@ public class ApiClient {
     } else if ("DELETE".equals(method)) {
       response = invocationBuilder.delete();
     } else {
-      throw new ApiException(500, "unknown method type " + method);
+      throw ApiException.builder()
+              .code(500)
+              .message( "unknown method type " + method)
+              .build();
     }
 
     statusCode = response.getStatusInfo().getStatusCode();
@@ -526,7 +533,7 @@ public class ApiClient {
           serviceException = response.readEntity(ServiceException.class);
           serviceException.setResponseHeaders(responseHeaders);
         } catch (RuntimeException e) {
-          throw new ApiException(response.getStatus(),responseHeaders,"Failed to build ServiceException from service response: " + e.getMessage());
+          throw ApiException.builder().code(statusCode).responseHeaders(responseHeaders).throwable(e).build();
 	}
       }
       throw serviceException;
