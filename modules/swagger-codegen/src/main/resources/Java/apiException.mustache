@@ -2,10 +2,12 @@ package {{invokerPackage}};
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import java.util.Map;
 import java.util.List;
 
 @Getter
+@ToString
 {{>generatedAnnotation}}
 public class ApiException extends RuntimeException {
   private int code = 0;
