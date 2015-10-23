@@ -515,6 +515,10 @@ public class ApiClient {
               .build();
     }
 
+    return handleResponse(returnType, response);
+  }
+
+  protected <T> T handleResponse(TypeRef returnType, Response response) {
     statusCode = response.getStatusInfo().getStatusCode();
     responseHeaders = buildResponseHeaders(response);
 
@@ -528,13 +532,11 @@ public class ApiClient {
     } else {
       String message = "error";
       ServiceException serviceException = null;
-      if (response.hasEntity()) {
-        try {
-          serviceException = response.readEntity(ServiceException.class);
-          serviceException.setResponseHeaders(responseHeaders);
-        } catch (RuntimeException e) {
-          throw ApiException.builder().code(statusCode).responseHeaders(responseHeaders).throwable(e).build();
-	}
+      try {
+        serviceException = response.readEntity(ServiceException.class);
+        serviceException.setResponseHeaders(responseHeaders);
+      } catch (RuntimeException e) {
+        throw ApiException.builder().code(statusCode).responseHeaders(responseHeaders).throwable(e).build();
       }
       throw serviceException;
     }
