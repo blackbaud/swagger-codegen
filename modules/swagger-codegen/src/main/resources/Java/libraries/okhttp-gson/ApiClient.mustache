@@ -560,7 +560,7 @@ public class ApiClient {
    * @param returnType The type of the Java object
    * @return The deserialized Java object
    */
-  public <T> T deserialize(Response response, Type returnType) throws ApiException {
+  public <T> T deserialize(Response response, Type returnType) {
     if (response == null || returnType == null)
       return null;
 
@@ -575,7 +575,7 @@ public class ApiClient {
       else
         respBody = null;
     } catch (IOException e) {
-      throw new ApiException(e);
+      throw ApiException.builder().throwable(e).build();
     }
 
     if (respBody == null || "".equals(respBody))
@@ -592,11 +592,10 @@ public class ApiClient {
       // Expecting string, return the raw response body.
       return (T) respBody;
     } else {
-      throw new ApiException(
-        "Content type \"" + contentType + "\" is not supported for type: " + returnType,
-        response.code(),
-        response.headers().toMultimap(),
-        respBody);
+      throw ApiException.builder().message("Content type \"" + contentType + "\" is not supported for type: " + returnType)
+        .code(response.code())
+        .responseHeaders(response.headers().toMultimap())
+        .responseBody(respBody).build();
     }
   }
 
@@ -608,21 +607,21 @@ public class ApiClient {
    * @param contentType The request Content-Type
    * @return The serialized string
    */
-  public String serialize(Object obj, String contentType) throws ApiException {
+  public String serialize(Object obj, String contentType) {
     if (contentType.startsWith("application/json")) {
       if (obj != null)
         return json.serialize(obj);
       else
         return null;
     } else {
-      throw new ApiException("Content type \"" + contentType + "\" is not supported");
+      throw ApiException.builder().message("Content type \"" + contentType + "\" is not supported").build();
     }
   }
 
   /**
    * Download file from the given response.
    */
-  public File downloadFileFromResponse(Response response) throws ApiException {
+  public File downloadFileFromResponse(Response response) {
     try {
         File file = prepareDownloadFile(response);
         BufferedSink sink = Okio.buffer(Okio.sink(file));
@@ -630,7 +629,7 @@ public class ApiClient {
         sink.close();
         return file;
     } catch (IOException e) {
-        throw new ApiException(e);
+        throw ApiException.builder().throwable(e).build();
     }
   }
 
@@ -672,7 +671,7 @@ public class ApiClient {
   /**
    * @see #execute(Call, Type)
    */
-  public <T> T execute(Call call) throws ApiException {
+  public <T> T execute(Call call)  {
     return execute(call, null);
   }
 
@@ -683,21 +682,21 @@ public class ApiClient {
    * @param <T> The return type corresponding to (same with) returnType
    * @return The Java object deserialized from response body. Returns null if returnType is null.
    */
-  public <T> T execute(Call call, Type returnType) throws ApiException {
+  public <T> T execute(Call call, Type returnType) {
     try {
       Response response = call.execute();
       this.statusCode = response.code();
       this.responseHeaders = response.headers().toMultimap();
       return handleResponse(response, returnType);
     } catch (IOException e) {
-      throw new ApiException(e);
+      throw ApiException.builder().throwable(e).build();
     }
   }
 
   /**
    * #see executeAsync(Call, Type, ApiCallback)
    */
-  public <T> void executeAsync(Call call, ApiCallback<T> callback) throws ApiException {
+  public <T> void executeAsync(Call call, ApiCallback<T> callback) {
     executeAsync(call, null, callback);
   }
 
@@ -711,7 +710,7 @@ public class ApiClient {
     call.enqueue(new Callback() {
       @Override
       public void onFailure(Request request, IOException e) {
-        callback.onFailure(new ApiException(e), 0, null);
+        callback.onFailure(ApiException.builder().throwable(e).build(), 0, null);
       }
 
       @Override
@@ -728,7 +727,7 @@ public class ApiClient {
     });
   }
 
-  public <T> T handleResponse(Response response, Type returnType) throws ApiException {
+  public <T> T handleResponse(Response response, Type returnType) {
     if (response.isSuccessful()) {
       if (returnType == null || response.code() == 204) {
         // returning null if the returnType is not defined,
@@ -743,10 +742,10 @@ public class ApiClient {
         try {
           respBody = response.body().string();
         } catch (IOException e) {
-          throw new ApiException(response.message(), e, response.code(), response.headers().toMultimap());
+          throw ApiException.builder().message(response.message()).throwable(e).code(response.code()).responseHeaders(response.headers().toMultimap()).build();
         }
       }
-      throw new ApiException(response.message(), response.code(), response.headers().toMultimap(), respBody);
+      throw ApiException.builder().message(response.message()).code(response.code()).responseHeaders(response.headers().toMultimap()).responseBody( respBody).build();
     }
   }
 
@@ -762,7 +761,7 @@ public class ApiClient {
    * @param authNames The authentications to apply
    * @return The HTTP call
    */
-  public Call buildCall(String path, String method, List<Pair> queryParams, Object body, Map<String, String> headerParams, Map<String, Object> formParams, String[] authNames) throws ApiException {
+  public Call buildCall(String path, String method, List<Pair> queryParams, Object body, Map<String, String> headerParams, Map<String, Object> formParams, String[] authNames) {
     updateParamsForAuth(authNames, queryParams, headerParams);
 
     final String url = buildUrl(path, queryParams);
