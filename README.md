@@ -14,7 +14,7 @@ git clone https://github.com/blackbaud/swagger-codegen
 
 cd swagger-codegen
 
-./run-in-docker.sh mvn package
+./run-in-docker.sh mvn clean package
 ```
 
 ## Command to generate client code
