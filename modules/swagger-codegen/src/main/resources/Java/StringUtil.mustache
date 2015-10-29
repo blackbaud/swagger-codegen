@@ -48,4 +48,9 @@ public class StringUtil {
     if (o == null) return "null";
     return o.toString().replace("\n", "\n    ");
   }
+
+  public static boolean isBlank(String s){
+    return (s == null || s.trim().isEmpty());
+  }
+
 }
