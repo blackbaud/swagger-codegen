@@ -49,11 +49,8 @@ public class StringUtil {
     return o.toString().replace("\n", "\n    ");
   }
 
-  public static boolean isNotBlank(String s){
-    if(s != null && !s.trim().equals("")){
-      return true;
-    } 
-    return false;
+  public static boolean isBlank(String s){
+    return (s == null || s.trim().isEmpty());
   }
 
 }
