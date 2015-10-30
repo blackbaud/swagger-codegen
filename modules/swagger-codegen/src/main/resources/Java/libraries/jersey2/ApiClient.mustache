@@ -48,8 +48,7 @@ import {{invokerPackage}}.auth.OAuth;
 {{>generatedAnnotation}}
 public class ApiClient {
 
-  private static final String MDC_CORRELATION_LABEL = "X-Trace-Id";
-  private static final String HEADER_CORRELATION_LABEL = "X-Trace-Id";
+  private static final String HEADER_AND_MDC_KEY = "X-Trace-Id";
 
   private Map<String, Client> hostMap = new HashMap<String, Client>();
   private Map<String, String> defaultHeaderMap = new HashMap<String, String>();
@@ -464,9 +463,9 @@ public class ApiClient {
       }
     }
 
-    String traceId = MDC.get(MDC_CORRELATION_LABEL);
+    String traceId = MDC.get(HEADER_AND_MDC_KEY);
     if(!StringUtil.isBlank(traceId)){
-      invocationBuilder.header(HEADER_CORRELATION_LABEL, traceId);
+      invocationBuilder.header(HEADER_AND_MDC_KEY, traceId);
     }
 
     Entity<?> formEntity = null;
