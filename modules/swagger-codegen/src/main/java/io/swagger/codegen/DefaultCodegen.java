@@ -392,7 +392,7 @@ public class DefaultCodegen {
         typeMapping.put("int", "Integer");
         typeMapping.put("float", "Float");
         typeMapping.put("number", "BigDecimal");
-        typeMapping.put("DateTime", "Date");
+        typeMapping.put("DateTime", "java.time.LocalDateTime");
         typeMapping.put("long", "Long");
         typeMapping.put("short", "Short");
         typeMapping.put("char", "String");
@@ -420,6 +420,7 @@ public class DefaultCodegen {
         importMapping.put("List", "java.util.*");
         importMapping.put("Set", "java.util.*");
         importMapping.put("LocalDate", "java.time.LocalDate");
+        importMapping.put("LocalDateTime", "java.time.LocalDateTime");
         importMapping.put("URI", "java.net.URI");
         //importMapping.put("DateTime", "org.joda.time.*");
         //importMapping.put("LocalDateTime", "org.joda.time.*");
