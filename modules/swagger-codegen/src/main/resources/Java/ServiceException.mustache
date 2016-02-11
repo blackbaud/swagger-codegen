@@ -23,6 +23,7 @@ public class ServiceException extends RuntimeException {
     private String errorCode;
     private Response.Status statusCode;
     private String message;
+    private Map<String,String> violations;
     private Object[] args;
 }
 
