@@ -73,10 +73,10 @@ public class JavaModelTest {
         Assert.assertEquals(property3.baseName, "createdAt");
         Assert.assertEquals(property3.getter, "getCreatedAt");
         Assert.assertEquals(property3.setter, "setCreatedAt");
-        Assert.assertEquals(property3.datatype, "java.time.LocalDateTime");
+        Assert.assertEquals(property3.datatype, "java.time.ZonedDateTime");
         Assert.assertEquals(property3.name, "createdAt");
         Assert.assertEquals(property3.defaultValue, "null");
-        Assert.assertEquals(property3.baseType, "java.time.LocalDateTime");
+        Assert.assertEquals(property3.baseType, "java.time.ZonedDateTime");
         Assert.assertNull(property3.hasMore);
         Assert.assertNull(property3.required);
         Assert.assertTrue(property3.isNotContainer);
