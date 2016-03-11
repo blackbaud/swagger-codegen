@@ -26,6 +26,7 @@ import io.swagger.models.parameters.QueryParameter;
 import io.swagger.models.parameters.SerializableParameter;
 import io.swagger.models.properties.AbstractNumericProperty;
 import io.swagger.models.properties.ArrayProperty;
+import io.swagger.models.properties.UUIDProperty;
 import io.swagger.models.properties.BooleanProperty;
 import io.swagger.models.properties.ByteArrayProperty;
 import io.swagger.models.properties.DateProperty;
@@ -589,6 +590,8 @@ public class DefaultCodegen {
             datatype = "map";
         } else if (p instanceof DecimalProperty) {
             datatype = "number";
+        } else if (p instanceof UUIDProperty) {
+            datatype = "UUID";
         } else if (p instanceof RefProperty) {
             try {
                 RefProperty r = (RefProperty) p;
